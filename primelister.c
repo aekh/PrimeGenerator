@@ -126,9 +126,9 @@ int primelister(unsigned int primes) {
   return 0;
 }
 
-int main() {//int argc, char* argv[]) {
-  //if (2 != argc) {puts("one argument with number of primes to find.");}
-  //unsigned int primes = strtoul(argv[0], NULL, 10);
-  (void) primelister(3631);
+int main(int argc, char **argv) {
+  if (2 != argc) {puts("one argument with number of primes to find.");}
+  unsigned int primes = strtoul(argv[1], NULL, 10);
+  (void) primelister(primes);
   return 0;
 }

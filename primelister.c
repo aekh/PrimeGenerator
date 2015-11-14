@@ -10,11 +10,13 @@ typedef struct vector {
   unsigned int *arr;
   unsigned long long pos;
   unsigned long long size;
+  //unsigned long long offset;
 } vec;
 
 vec *vec_init(unsigned long long prime) {
   unsigned long long pos = prime - 1;
   unsigned long long size = prime*prime;
+  //unsigned long long offset = 0;
   unsigned int *arr = calloc(prime*prime, sizeof(unsigned long));
   for (unsigned long long i = 1; i < prime; ++i) {
     arr[i * prime - 1] = 1;
@@ -74,7 +76,7 @@ int primelister(unsigned int primes) {
   printf("2, ");
   // Algorithm
   while (pos < primes) {
-    printf("current pos:%u, primes:%u\n", pos, primes);
+    //printf("current pos:%u, primes:%u\n", pos, primes);
     prevnum = num;
     num = 1;
     for (int p = 0; arr[p] != NULL; ++p) {
@@ -102,14 +104,15 @@ int primelister(unsigned int primes) {
   // Fin
   for (unsigned long i = 0; i < primes; ++i) {
     free(arr[i]->arr);
+    free(arr[i]);
   }
   free(arr);
   return 0;
 }
 
-int main(){//int argc, char* argv[]) {
+int main() {//int argc, char* argv[]) {
   //if (2 != argc) {puts("one argument with number of primes to find.");}
   //unsigned int primes = strtoul(argv[0], NULL, 10);
-  (void) primelister(500);
+  (void) primelister(200);
   return 0;
 }

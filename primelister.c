@@ -1,79 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// Waring atm this might eat memory.
+#include <limits.h>
 
 typedef struct vector {
   unsigned long long prime;
-  unsigned int *arr;
-  unsigned long long pos;
-  unsigned long long size;
-  unsigned long long offset;
+  unsigned long long *arr;
 } vec;
 
 vec *vec_init(unsigned long long prime) {
-  unsigned long long pos = 0, offset = prime;
-  unsigned long long size = prime;
-  unsigned int *arr = calloc(prime*prime, sizeof(unsigned long));
+  unsigned long long *arr = calloc(64, sizeof(unsigned long));
   if (NULL == arr) {printf("Memory error!"); exit(0);}
-
-  for (unsigned long long i = 0; i < size; ++i) {
-    arr[i] = 1;
-  } arr[size - 1] = 2;
+  arr[0] = prime - 1;
 
   vec *vect = calloc(1, sizeof(vec));
   if (NULL == vect) {printf("Memory error!"); exit(0);}
   vect->prime = prime;
-  vect->pos = pos;
-  vect->size = size;
   vect->arr = arr;
-  vect->offset = offset;
 
   return vect;
-} // [0,1,0,2,0,1,0,3]
-  // [0,1,2,3,4,5,6,7]
-  // [1,2,1,3]
-
-int vec_repeat(vec *vect) {
-  // Init new values
-  unsigned long long newSize = vect->prime * vect->size;
-  unsigned int *newArr = calloc(newSize, sizeof(unsigned long));
-  if (NULL == newArr) {printf("Memory error!"); exit(0);}
-  for (unsigned long i = 0; i < vect->prime; ++i) {
-    memcpy(newArr + i * vect->size, vect->arr, vect->size * sizeof(unsigned long));
-  } newArr[newSize - 1] += 1;
-
-  // Get old array
-  unsigned int *oldArr = vect->arr;
-
-  // Set the old values
-  vect->pos += 1;
-  vect->size = newSize;
-  vect->arr = newArr;
-  
-  // Free old array
-  free(oldArr);
-
-  return 0;
 }
 
-unsigned int vec_getNextExp(vec *vect) {
-  unsigned int exponent = 0llu;
-  if (vect->prime == vect->offset) {
-    exponent = vect->arr[vect->pos];
-    if (vect->pos == vect->size - 1) {
-	vec_repeat(vect);
+unsigned short vec_getNextExp(vec *vect) {
+  unsigned short exponent = 0llu;
+  for (unsigned short i = 0; i < 64; ++i) {
+    if (vect->arr[i] == vect->prime - 1) {
+      vect->arr[i] = 0;
+      continue;
     } else {
-      vect->pos += 1;
+      vect->arr[i] += 1;
+      exponent = i;
+      break;
     }
-    vect->offset = 1;
-  } else {
-    vect->offset += 1;
   } return exponent;
 }
 
-unsigned long long powll(unsigned long long base, unsigned int exp) {
+unsigned long long powll(unsigned long long base, unsigned short exp) {
   unsigned long long result = 1llu;
   while (exp) {
     if (exp & 1) {result *= base;}

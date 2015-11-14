@@ -116,7 +116,7 @@ int primelister(unsigned int primes) {
       printf("%llu, ", newPrime);
     } //printf("prevnum: %llu, num; %llu - - \n", prevnum, num);
   }
-  puts("End");
+  puts("");
   // Fin
   for (unsigned long i = 0; i < primes; ++i) {
     free(arr[i]->arr);
